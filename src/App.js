@@ -1,4 +1,3 @@
-import './App.css'
 import { useState, useEffect } from 'react'
 
 // Generate a unique number from 2 numbers, order sensitive

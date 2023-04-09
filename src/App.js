@@ -1,4 +1,9 @@
-import { useState, useEffect } from 'react'
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useMemo
+} from 'react'
 
 // Generate a unique number from 2 numbers, order sensitive
 const cantorPair = (a, b) => (1/2)*(a + b)*(a + b + 1) + b
@@ -24,15 +29,17 @@ const getRandomIntInclusive = (min, max) => {
 const App = () => {
   const numRows = 3
   const numCols = 5
-  const initialHoleRows = [...Array(numRows)]
-        .map((_, r) => [...Array(numCols)].map((_, c) => makeHole(r, c)))
-
+  const initialHoleRows = useMemo(() => (
+    [...Array(numRows)].map((_, r) =>
+      [...Array(numCols)].map((_, c) => makeHole(r, c)))
+  ), [])
+  
   const [holeRows, setHoleRows] = useState(initialHoleRows)
   const [score, setScore] = useState(0)
 
-  const resetHoles = () => {
+  const resetHoles = useCallback(() => {
     setHoleRows(initialHoleRows)
-  }
+  }, [initialHoleRows])
 
   const clickHole = hole => {
     if (hole.active) {
@@ -48,7 +55,7 @@ const App = () => {
       resetHoles()
       setHoleRows(currentHoleRows => activateHole(r, c, currentHoleRows))
     }, 1000)
-  }, [])
+  }, [resetHoles])
   
   return (
     <div className="flex flex-col items-center gap-3">
